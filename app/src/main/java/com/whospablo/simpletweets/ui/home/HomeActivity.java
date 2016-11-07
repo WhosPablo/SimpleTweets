@@ -14,11 +14,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -29,6 +30,7 @@ import com.whospablo.simpletweets.SimpleTweetsApplication;
 import com.whospablo.simpletweets.ui.compose.ComposeActivity;
 import com.whospablo.simpletweets.ui.login.LoginActivity;
 import com.whospablo.simpletweets.ui.profile.ProfileActivity;
+import com.whospablo.simpletweets.util.fragments.RecyclerFragment;
 import com.whospablo.simpletweets.util.models.User;
 
 import org.json.JSONObject;
@@ -39,7 +41,15 @@ import cz.msebera.android.httpclient.Header;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
+
+    public interface RefreshableFragment{
+        void refresh( OnRefreshDoneListener listener );
+    }
+
+    public interface OnRefreshDoneListener{
+        void refreshDone();
+    }
 
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
@@ -48,11 +58,8 @@ public class HomeActivity extends AppCompatActivity
     @BindView(R.id.viewpager) ViewPager viewPager;
     @BindView(R.id.tabs) PagerSlidingTabStrip tabsStrip;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout mSwipeRefreshLayout;
-    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
-
-    RefreshableFragment mCurrentFragment;
-
-
+//    @BindView(R.id.progress_bar) ProgressBar mProgressBar;
+    HomeFragmentsPagerAdapter mFragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +87,17 @@ public class HomeActivity extends AppCompatActivity
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        mFragmentAdapter = new HomeFragmentsPagerAdapter(getSupportFragmentManager());
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        viewPager.setAdapter(new TweetPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(mFragmentAdapter);
+
 //
 //        // Give the PagerSlidingTabStrip the ViewPager
 //        // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
+
+
+
 
         tabsStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -120,8 +132,15 @@ public class HomeActivity extends AppCompatActivity
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    if(mCurrentFragment != null){
-                        mCurrentFragment.refresh(mSwipeRefreshLayout);
+                    Fragment fragment =
+                            mFragmentAdapter.getRegisteredFragment(viewPager.getCurrentItem());
+                    if(fragment instanceof RefreshableFragment){
+                        ((RefreshableFragment) fragment).refresh(new OnRefreshDoneListener() {
+                            @Override
+                            public void refreshDone() {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
                     }
                 }
             });
@@ -195,11 +214,6 @@ public class HomeActivity extends AppCompatActivity
 
         if (id == R.id.nav_profile) {
             startActivity(new Intent(this, ProfileActivity.class));
-//        } else if (id == R.id.nav_highlights) {
-//
-//        } else if (id == R.id.nav_moments) {
-//
-//        } else if (id == R.id.nav_lists) {
 
         } else if (id == R.id.nav_sign_out) {
             SimpleTweetsApplication.getRestClient().clearAccessToken();
@@ -216,24 +230,28 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    public void setCurrentFragment(RefreshableFragment fragment) {
-        mCurrentFragment = fragment;
-    }
-
-    public ProgressBar getProgressBar() {
-        return mProgressBar;
-    }
-
-    class TweetPagerAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider{
+    class HomeFragmentsPagerAdapter extends FragmentPagerAdapter implements PagerSlidingTabStrip.IconTabProvider{
 
         private int tabTitleIcons[] = {R.drawable.ic_home, R.drawable.ic_bell, R.drawable.ic_message};
+        private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
 
-        public TweetPagerAdapter(FragmentManager fm) {
+
+
+        public HomeFragmentsPagerAdapter(FragmentManager fm) {
             super(fm);
+
+        }
+
+        // Register the fragment when the item is instantiated
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public RecyclerFragment getItem(int position) {
             if (position == 0) {
                 getSupportActionBar().setTitle("Home");
                 return new HomeFragment();
@@ -256,6 +274,18 @@ public class HomeActivity extends AppCompatActivity
         @Override
         public int getPageIconResId(int position) {
             return tabTitleIcons[position];
+        }
+
+        // Unregister when the item is inactive
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        // Returns the fragment for the position (if instantiated)
+        public Fragment getRegisteredFragment(int position) {
+            return registeredFragments.get(position);
         }
     }
 }

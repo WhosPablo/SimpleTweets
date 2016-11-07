@@ -1,11 +1,9 @@
 package com.whospablo.simpletweets.ui.home;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.whospablo.simpletweets.SimpleTweetsApplication;
@@ -24,26 +22,20 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 
 
-public class MessagesFragment extends RecyclerFragment implements RefreshableFragment{
+public class MessagesFragment extends RecyclerFragment implements HomeActivity.RefreshableFragment{
     private TwitterClient mClient;
     private List<Message> mMessages;
     private MessagesAdapter mMessagesAdapter;
-    private HomeActivity mActivity;
-    private ProgressBar mProgressBar;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private HomeActivity.OnRefreshDoneListener mListener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mClient = SimpleTweetsApplication.getRestClient();
         mMessages = new ArrayList<>();
         mMessagesAdapter = new MessagesAdapter(getContext(), mMessages);
-        if(getActivity() instanceof HomeActivity){
-            mActivity = (HomeActivity) getActivity();
-            mActivity.setCurrentFragment(this);
-            mProgressBar = mActivity.getProgressBar();
+        loadRecent();
 
-        }
-        populateMessages(1);
     }
 
     @Override
@@ -55,38 +47,69 @@ public class MessagesFragment extends RecyclerFragment implements RefreshableFra
         getRecyclerView().addOnScrollListener(new EndlessRecyclerViewScrollListener(llm) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Message lastTweet = mMessages.get(mMessages.size()-1);
-                populateMessages(lastTweet.id);
+                loadMore();
             }
         });
 
     }
 
-    private void populateMessages(long since_id){
-        mProgressBar.setVisibility(View.VISIBLE);
-        mClient.getMessages(since_id, new JsonHttpResponseHandler(){
+    private void loadMore(){
+        long lastMessageid = Long.MAX_VALUE;
+
+        if(mMessages.size()>0){
+            lastMessageid = mMessages.get(mMessages.size()-1).id-1;
+        }
+        mClient.getMessagesBefore(lastMessageid, new JsonHttpResponseHandler(){
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 mMessages.addAll(Message.fromJSONArray(response));
                 mMessagesAdapter.notifyDataSetChanged();
-                mProgressBar.setVisibility(View.GONE);
-                if(mSwipeRefreshLayout != null){
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
             }
 
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+
             }
         });
     }
 
+    private void loadRecent(){
+        long mostRecentId = 1;
+
+        if(mMessages.size()>0){
+            mostRecentId = mMessages.get(0).id;
+        }
+
+        mClient.getMessagesSince(mostRecentId, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                List<Message> newMessages = Message.fromJSONArray(response);
+                for(int i = newMessages.size()-1; i>=0; i--){
+                    mMessages.add(0,newMessages.get(i));
+                }
+                mMessagesAdapter.notifyDataSetChanged();
+                doneRefreshing();
+            }
+
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                doneRefreshing();
+            }
+        });
+    }
+
+    private void doneRefreshing(){
+        if(mListener!=null)
+            mListener.refreshDone();
+    }
+
     @Override
-    public void refresh(SwipeRefreshLayout layout) {
-        mSwipeRefreshLayout = layout;
-        mMessages.clear();
-        populateMessages(1);
+    public void refresh(HomeActivity.OnRefreshDoneListener listener) {
+        mListener = listener;
+        loadRecent();
     }
 }

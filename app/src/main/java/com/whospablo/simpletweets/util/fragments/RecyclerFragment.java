@@ -1,10 +1,8 @@
 package com.whospablo.simpletweets.util.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +17,11 @@ import butterknife.ButterKnife;
  * Created by pablo_arango on 11/3/16.
  */
 
-public class RecyclerFragment extends Fragment {
-    private static final String LAYOUT_ID_ARG = "layout";
-    private static final String RECYCLER_VIEW_ID_ARG = "reyclerview";
+public abstract class RecyclerFragment extends Fragment {
+
+
 
     @BindView(R.id.fragment_recycler_view) RecyclerView recyclerView;
-    Activity listener;
 
     // This event fires 1st, before creation of fragment or any views
     // The onAttach method is called when the Fragment instance is associated with an Activity.
@@ -32,9 +29,6 @@ public class RecyclerFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof Activity){
-            this.listener = (FragmentActivity) context;
-        }
     }
 
     // This event fires 2nd, before views are created for the fragment
@@ -65,7 +59,6 @@ public class RecyclerFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        this.listener = null;
     }
 
     // This method is called after the parent Activity's onCreate() method has completed.
@@ -95,4 +88,6 @@ public class RecyclerFragment extends Fragment {
     public RecyclerView getRecyclerView(){
         return recyclerView;
     }
+
+
 }

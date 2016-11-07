@@ -42,31 +42,57 @@ public class TwitterClient extends OAuthBaseClient {
 //		client.get(apiUrl, params, handler);
 //	}
 
-	public void getHomeTimeline(long since_id, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("/statuses/home_timeline.json");
-		// Can specify query string params directly or through RequestParams.
-		RequestParams params = new RequestParams();
-		params.put("count", 50);
-		params.put("since_id", since_id);
-		client.get(apiUrl, params, handler);
+    public void getHomeTimelineSince(long since_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("/statuses/home_timeline.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("count", 50);
+        params.put("since_id", since_id);
+        client.get(apiUrl, params, handler);
+    }
 
-	}
+    public void getHomeTimelineBefore(long max_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("/statuses/home_timeline.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("count", 50);
+        params.put("max_id", max_id);
+        client.get(apiUrl, params, handler);
+    }
 
-	public void getMentionsTimeline(long since_id, AsyncHttpResponseHandler handler) {
-		String apiUrl = getApiUrl("/statuses/mentions_timeline.json");
-		// Can specify query string params directly or through RequestParams.
-		RequestParams params = new RequestParams();
-		params.put("count", 50);
-		params.put("since_id", since_id);
-		client.get(apiUrl, params, handler);
-	}
+    public void getMentionsTimelineSince(long since_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("/statuses/mentions_timeline.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("count", 50);
+        params.put("since_id", since_id);
+        client.get(apiUrl, params, handler);
+    }
 
-    public void getMessages(long since_id, AsyncHttpResponseHandler handler) {
+    public void getMentionsTimelineBefore(long max_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("/statuses/mentions_timeline.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("count", 50);
+        params.put("max_id", max_id);
+        client.get(apiUrl, params, handler);
+    }
+
+    public void getMessagesSince(long since_id, AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("/direct_messages.json");
         // Can specify query string params directly or through RequestParams.
         RequestParams params = new RequestParams();
         params.put("count", 50);
         params.put("since_id", since_id);
+        client.get(apiUrl, params, handler);
+    }
+
+    public void getMessagesBefore(long max_id, AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("/direct_messages.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        params.put("count", 50);
+        params.put("max_id", max_id);
         client.get(apiUrl, params, handler);
     }
 
