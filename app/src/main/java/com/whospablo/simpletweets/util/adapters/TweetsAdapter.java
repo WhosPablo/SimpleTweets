@@ -1,6 +1,7 @@
 package com.whospablo.simpletweets.util.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -15,8 +16,11 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.whospablo.simpletweets.R;
+import com.whospablo.simpletweets.ui.profile.ProfileActivity;
 import com.whospablo.simpletweets.util.models.Tweet;
 import com.whospablo.simpletweets.util.models.User;
+
+import org.parceler.Parcels;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -74,7 +78,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder tweetHolder, int position) {
         Tweet tweet = mTweets.get(position);
-        User user = tweet.getUser();
+        final User user = tweet.getUser();
         tweetHolder.body.setText(tweet.getBody());
         tweetHolder.name.setText(user.getName());
         tweetHolder.handle.setText(user.getHandle());
@@ -98,6 +102,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 })
                 .bitmapTransform(new RoundedCornersTransformation(mContext, 10, 0))
                 .into(tweetHolder.img);
+
+        tweetHolder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(mContext, ProfileActivity.class);
+                i.putExtra(ProfileActivity.PROFILE_USER, Parcels.wrap(user));
+                mContext.startActivity(i);
+            }
+        });
+
     }
 
     @Override

@@ -14,16 +14,16 @@ The following **required** functionality is completed:
   * [X] User is displayed the [relative timestamp](https://gist.github.com/nesquena/f786232f5ef72f6e10a7) for each tweet "8m", "7h"
   * [X] User can **pull down to refresh tweets** in either timeline
   * [X] User can view more tweets as they scroll with [infinite pagination](http://guides.codepath.com/android/Endless-Scrolling-with-AdapterViews-and-RecyclerView). Number of tweets is unlimited.
-* [ ] User can navigate to **view their own profile**
-  * [ ] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
-* [ ] User can **click on the profile image** in any tweet to see **another user's** profile.
- * [ ] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
- * [ ] Profile view includes that user's timeline
+* [X] User can navigate to **view their own profile**
+  * [X] User can see picture, tagline, # of followers, # of following, and tweets on their profile.
+* [X] User can **click on the profile image** in any tweet to see **another user's** profile.
+ * [X] User can see picture, tagline, # of followers, # of following, and tweets of clicked user.
+ * [X] Profile view includes that user's timeline
 * [ ] User can **compose and post a new tweet**
   * [X] User can click a “Compose” icon in the Action Bar on the top right (USING FAB INSTEAD)
-  * [ ] User can then enter a new tweet and post this to twitter
+  * [X] User can then enter a new tweet and post this to twitter
   * [ ] User is taken back to home timeline with **new tweet visible** in timeline
-  * [ ] User can **see a counter with total number of characters left for tweet** on compose tweet page
+  * [X] User can **see a counter with total number of characters left for tweet** on compose tweet page
 * [X] When a network request is sent, user sees an [indeterminate progress indicator](http://guides.codepath.com/android/Handling-ProgressBars#progress-within-actionbar)
 * [ ] User can **open the twitter app offline and see last loaded tweets**. Persisted in SQLite tweets are refreshed on every application launch. While "live data" is displayed when app can get it from Twitter API, it is also saved for use in an offline mode.
 

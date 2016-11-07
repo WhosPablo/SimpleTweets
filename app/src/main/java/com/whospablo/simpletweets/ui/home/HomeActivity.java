@@ -102,21 +102,10 @@ public class HomeActivity extends AppCompatActivity
         tabsStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset,
-                                       int positionOffsetPixels) {
-            }
+                                       int positionOffsetPixels) {}
 
             @Override
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    getSupportActionBar().setTitle("Home");
-                } else if (position == 1) {
-                    getSupportActionBar().setTitle("Mentions");
-                } else if (position == 2) {
-                    getSupportActionBar().setTitle("Messages");
-                } else {
-                    getSupportActionBar().setTitle("Simple Tweets");
-                }
-            }
+            public void onPageSelected(int position) {}
 
             @Override
             public void onPageScrollStateChanged(int state) {

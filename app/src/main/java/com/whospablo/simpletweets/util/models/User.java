@@ -10,6 +10,7 @@ import com.whospablo.simpletweets.db.SimpleTweetsDatabase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
  * Note: All models **must extend from** `BaseModel` as shown below.
  *
  */
+@Parcel
 @Table(database = SimpleTweetsDatabase.class)
 public class User extends BaseModel {
 
@@ -40,6 +42,11 @@ public class User extends BaseModel {
     @Column
     private String imgUrl;
 
+    private int followers;
+    private int following;
+
+    private String description;
+
     public User() {
         super();
     }
@@ -51,6 +58,9 @@ public class User extends BaseModel {
         try {
             this.name = object.getString("name");
             this.handle = object.getString("screen_name");
+            this.description = object.getString("description");
+            this.followers = object.getInt("followers_count");
+            this.following = object.getInt("friends_count");
             this.imgUrl = object.getString("profile_image_url_https").replace("_normal", "");
 //            Log.d("d", object.toString(2));
         } catch (JSONException e) {
@@ -108,5 +118,29 @@ public class User extends BaseModel {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public int getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(int followers) {
+        this.followers = followers;
+    }
+
+    public int getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(int following) {
+        this.following = following;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

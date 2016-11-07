@@ -15,7 +15,7 @@
         android:layout_height="wrap_content">
 
         <FrameLayout
-            android:id="@+id/item_tweet_img_frame"
+            android:id="@+id/item_img_frame"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_widthPercent="18%"
@@ -46,8 +46,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/item_name"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/item_tweet_img_frame"
-            android:layout_toEndOf="@+id/item_tweet_img_frame"
+            android:layout_toRightOf="@+id/item_img_frame"
+            android:layout_toEndOf="@+id/item_img_frame"
             android:textStyle="normal|bold"
             android:textColor="@android:color/black" />
 
@@ -56,8 +56,8 @@
             android:padding="@dimen/item_tweet_text_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/item_tweet_img_frame"
-            android:layout_toEndOf="@id/item_tweet_img_frame"
+            android:layout_toRightOf="@id/item_img_frame"
+            android:layout_toEndOf="@id/item_img_frame"
             android:layout_below="@id/item_name"
             android:id="@+id/item_handle"
             android:textSize="12sp" />
@@ -68,8 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/item_handle"
-            android:layout_toRightOf="@id/item_tweet_img_frame"
-            android:layout_toEndOf="@id/item_tweet_img_frame"
+            android:layout_toRightOf="@id/item_img_frame"
+            android:layout_toEndOf="@id/item_img_frame"
             android:id="@+id/item_body"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="13sp"
