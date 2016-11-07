@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFF</color>
+    <color name="colorPrimaryDark">#292f33</color>
+    <color name="colorAccent">#55acee</color>
+    <color name="background_tab_pressed">#55000000</color>
+</resources>

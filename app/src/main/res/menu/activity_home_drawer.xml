@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group
+        android:id="@+id/menu_top"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_person"
+            android:title="Profile" />
+        <!--<item-->
+            <!--android:id="@+id/nav_highlights"-->
+            <!--android:icon="@drawable/ic_bell"-->
+            <!--android:title="Highlights" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_moments"-->
+            <!--android:icon="@drawable/ic_message"-->
+            <!--android:title="My Moments" />-->
+        <!--<item-->
+            <!--android:id="@+id/nav_lists"-->
+            <!--android:icon="@drawable/ic_manage"-->
+            <!--android:title="Lists" />-->
+    </group>
+
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="none">
+        <!--<menu>-->
+            <item
+                android:id="@+id/nav_sign_out"
+                android:icon="@drawable/ic_sign_out"
+                android:title="@string/menu_sign_out" />
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_send"-->
+                <!--android:title="Send" />-->
+        <!--</menu>-->
+    </group>
+
+</menu>
